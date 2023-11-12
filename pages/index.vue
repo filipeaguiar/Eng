@@ -1,4 +1,9 @@
 <template>
-  header <NuxtLink to="/login">login</NuxtLink>
-  <NuxtPage />
+  <NuxtLink to="/login">login</NuxtLink>
 </template>
+<script setup lang="ts">
+ definePageMeta({
+  layout: 'main',
+  protected: false
+ }) 
+</script>
