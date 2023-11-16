@@ -4,12 +4,11 @@ definePageMeta({
 })
 const client = useSupabaseClient()
 
-const alunos = await client.from('estudantes').select('*')
-
+const alunos = await client.from('colaboradores').select('*')
 
 </script>
 <template>
     <div>
-        <NuxtLink to="/estudante/new">Criar Estudante</NuxtLink>
+    <h1>VAGAS</h1>
     </div>
 </template>

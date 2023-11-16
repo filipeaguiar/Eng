@@ -20,37 +20,41 @@ const inactiveClass = ref(
     <div :class="isOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
       class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-gray-900 lg:translate-x-0 lg:static lg:inset-0">
       <div class="flex items-start justify-start mt-8">
-        <div class="flex items-center px-6">
-          <svg class="w-12 h-12" viewBox="0 0 1024 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-            d="M192 48c0-26.5 21.5-48 48-48H400c26.5 0 48 21.5 48 48V512H368V432c0-26.5-21.5-48-48-48s-48 21.5-48 48v80H192V48zM48 96H160V512H48c-26.5 0-48-21.5-48-48V320H80c8.8 0 16-7.2 16-16s-7.2-16-16-16H0V224H80c8.8 0 16-7.2 16-16s-7.2-16-16-16H0V144c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v48H560c-8.8 0-16 7.2-16 16s7.2 16 16 16h80v64H560c-8.8 0-16 7.2-16 16s7.2 16 16 16h80V464c0 26.5-21.5 48-48 48H480V96H592zM312 64c-8.8 0-16 7.2-16 16v24H272c-8.8 0-16 7.2-16 16v16c0 8.8 7.2 16 16 16h24v24c0 8.8 7.2 16 16 16h16c8.8 0 16-7.2 16-16V152h24c8.8 0 16-7.2 16-16V120c0-8.8-7.2-16-16-16H344V80c0-8.8-7.2-16-16-16H312z"
-              fill="#4C51BF" stroke="#4C51BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          <span class="mx-4 text-2xl font-semibold text-white">SGV</span>
-        </div>
+        <NuxtLink to="/dashboard">
+          <div class="flex items-center px-6">
+            <span class="text-blue-500 text-4xl">
+              <fa icon="fa-solid fa-hospital" />
+            </span>
+            <span class="mx-4 text-2xl font-semibold text-white">SGV-GEP</span>
+          </div>
+        </NuxtLink>
       </div>
 
       <nav class="mt-10">
         <NuxtLink class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[$route.name === 'Dashboard' ? activeClass : inactiveClass]" to="/estudante">
-          <svg xmlns="http://www.w3.org/2000/svg" height="1em"
-            viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-            <path
-              d="M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5V291.9c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"
-              fill="currentColor"
-            />
-          </svg>
+          :class="[$route.name === 'estudante' ? activeClass : inactiveClass]" to="/estudante">
+          <fa icon="fa-solid fa-graduation-cap" />
           <span class="mx-4">Estudantes</span>
         </NuxtLink>
         <NuxtLink class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
-          :class="[$route.name === 'Dashboard' ? activeClass : inactiveClass]" to="/colaborador">
-          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
-            <path 
-              d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
-              fill="currentColor"
-            />
-          </svg>
+          :class="[$route.name === 'colaborador' ? activeClass : inactiveClass]" to="/colaborador">
+          <fa icon="fa-solid fa-user" />
           <span class="mx-4">Colaboradores</span>
+        </NuxtLink>
+        <NuxtLink class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
+          :class="[$route.name === 'servico' ? activeClass : inactiveClass]" to="/servico">
+          <fa icon="fa-solid fa-house-chimney-medical" />
+          <span class="mx-4">Serviço</span>
+        </NuxtLink>
+        <NuxtLink class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
+          :class="[$route.name === 'instituicao' ? activeClass : inactiveClass]" to="/instituicao">
+          <fa icon="fa-solid fa-building-columns" />
+          <span class="mx-4">Instituição</span>
+        </NuxtLink>
+        <NuxtLink class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
+          :class="[$route.name === 'vaga' ? activeClass : inactiveClass]" to="/vaga">
+          <fa icon="fa-solid fa-calendar-check" />
+          <span class="mx-4">Vagas</span>
         </NuxtLink>
       </nav>
     </div>

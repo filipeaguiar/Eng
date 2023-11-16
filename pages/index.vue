@@ -1,9 +1,8 @@
 <template>
-  <NuxtLink to="/login">login</NuxtLink>
+    <h1>Página Inicial</h1>
 </template>
 <script setup lang="ts">
  definePageMeta({
-  layout: 'main',
-  protected: false
+  layout: 'main'
  }) 
 </script>

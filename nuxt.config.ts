@@ -6,4 +6,15 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
     "@nuxtjs/tailwindcss"
   ],
+  css: [
+    '@fortawesome/fontawesome-svg-core/styles.css'
+  ],
+  imports: {
+    presets: [
+      {
+        from: './types/supabase',
+        imports: ['Database']
+      }
+    ]
+  }
 })
