@@ -48,10 +48,10 @@ const estudante = computed((): Estudante => {
   }
 })
 
-async function setEstudante(estudante: Estudante){
+async function setEstudante(estudante: Estudante) {
   const client = useSupabaseClient<Database>()
   const { data: savedEstudante, error } = await client.from('estudantes').insert(estudante)
-    console.log(error)
+  console.log(error)
 }
 
 const { data: instituicoes, error: errorInstituicoes } = await client.from('instituicoes').select('id, nome')
@@ -63,16 +63,16 @@ const { data: instituicoes, error: errorInstituicoes } = await client.from('inst
         Novo Estudante
       </template>
       <template #content>
-        <form  @submit.prevent="setEstudante(estudante)">
+        <form @submit.prevent="setEstudante(estudante)">
           <div class="mb-6">
             <label for="instituicao" class="block mb-2 text-sm font-medium text-gray-900">
-              Instituição 
+              Instituição
             </label>
             <select id="instituicao" v-model.number="instituicao"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
               <option v-for="instituicao in instituicoes" :value="instituicao.id">
-                {{ instituicao.nome }} 
-              </option> 
+                {{ instituicao.nome }}
+              </option>
             </select>
           </div>
           <div class="mb-6">
@@ -92,6 +92,26 @@ const { data: instituicoes, error: errorInstituicoes } = await client.from('inst
             <input type="text" id="matricula" v-model="matricula"
               class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="matricula" required>
+          </div>
+          <div class="mb-6">
+            <label for="curso" class="block mb-2 text-sm font-medium text-gray-900">Curso</label>
+            <input type="text" id="curso" v-model="curso"
+              class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Curso" required>
+          </div>
+          <div class="mb-6">
+            <label for="observacao" class="block mb-2 text-sm font-medium text-gray-900">
+              Observação
+            </label>
+            <textarea id="observacao" rows="4" v-model="observacao"
+              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+              placeholder=""></textarea>
+          </div>
+          <div class="mb-6">
+            <label for="periodo" class="block mb-2 text-sm font-medium text-gray-900">Período</label>
+            <input type="number" id="periodo" v-model="periodo"
+              class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="" required>
           </div>
           <div class="flex items-start mb-6">
             <div class="flex items-center h-5">
@@ -118,26 +138,6 @@ const { data: instituicoes, error: errorInstituicoes } = await client.from('inst
               <input type="text" id="conselho" v-model="conselho"
                 class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Número do Conselho" required>
-            </div>
-            <div class="mb-6">
-              <label for="curso" class="block mb-2 text-sm font-medium text-gray-900">Curso</label>
-              <input type="text" id="curso" v-model="curso"
-                class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="Curso" required>
-            </div>
-            <div class="mb-6">
-              <label for="observacao" class="block mb-2 text-sm font-medium text-gray-900">
-                Observação
-              </label>
-              <textarea id="observacao" rows="4" v-model="observacao"
-                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                placeholder=""></textarea>
-            </div>
-            <div class="mb-6">
-              <label for="periodo" class="block mb-2 text-sm font-medium text-gray-900">Período</label>
-              <input type="number" id="periodo" v-model="periodo"
-                class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="" required>
             </div>
           </div>
           <button type="submit"
