@@ -6,7 +6,7 @@
       <div class="card-body font-normal text-gray-700 ">
         <slot name="content"></slot>
       </div>
-      <div class="card-footer">
+      <div class="card-footer my-5">
         <slot name="footer"></slot>
       </div>
     </div>

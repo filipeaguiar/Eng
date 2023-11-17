@@ -8,6 +8,7 @@ const alunos = await client.from('colaboradores').select('*')
 
 </script>
 <template>
+    <button type="button">OK</button>
     <div>
         Pagina inicial estudantes
         <pre>{{ alunos }}</pre>
