@@ -51,7 +51,7 @@ onMounted(() => {
             stroke-linejoin="round"
           />
         </svg>
-        <span class="text-2xl font-semibold text-gray-700">SVG</span>
+        <span class="text-2xl font-semibold text-gray-700">SVG-GEP</span>
       </div>
 
       <form class="mt-4" @submit.prevent="() => (isSignUp ? signUp() : login())">

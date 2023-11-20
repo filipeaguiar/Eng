@@ -1,4 +1,5 @@
 export default defineNuxtRouteMiddleware((to, from) => {
+
   // const user = useSupabaseUser()
   // console.log(to.meta?.protected)
   // if (!user.value && to.path === '/profile') {

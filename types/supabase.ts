@@ -64,12 +64,13 @@ export interface Database {
       estudantes: {
         Row: {
           cbo: string | null
-          cnes: string | null
+          cns: string | null
           conselho: string | null
           cpf: string
           created_at: string
           curso: string | null
           id: number
+          instituicao_id: number | null
           matricula: string
           nome: string
           observacao: string | null
@@ -78,12 +79,13 @@ export interface Database {
         }
         Insert: {
           cbo?: string | null
-          cnes?: string | null
+          cns?: string | null
           conselho?: string | null
           cpf: string
           created_at?: string
           curso?: string | null
           id?: number
+          instituicao_id?: number | null
           matricula: string
           nome: string
           observacao?: string | null
@@ -92,19 +94,28 @@ export interface Database {
         }
         Update: {
           cbo?: string | null
-          cnes?: string | null
+          cns?: string | null
           conselho?: string | null
           cpf?: string
           created_at?: string
           curso?: string | null
           id?: number
+          instituicao_id?: number | null
           matricula?: string
           nome?: string
           observacao?: string | null
           periodo?: number
           residente?: boolean | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "estudantes_instituicao_id_fkey"
+            columns: ["instituicao_id"]
+            isOneToOne: false
+            referencedRelation: "instituicoes"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       instituicoes: {
         Row: {

@@ -1,17 +1,12 @@
-<script setup lang="ts" >
+<script setup lang="ts">
 import type { Database } from '~/types/supabase'
-
 definePageMeta({
-    title: 'Editar Estudante',
-    layout: 'main',
+  title: 'Criar Estudante',
+  layout: 'main'
 })
-
-const route = useRoute()
 const client = useSupabaseClient<Database>()
-const { data: databaseEstudante, error: estudante_error } = await client.from('estudantes').select('*')
-    .eq('id', route.params.id)
 
-    const nome = ref('')
+const nome = ref('')
 const cpf = ref('')
 const matricula = ref('')
 const periodo = ref(1)
@@ -59,10 +54,10 @@ async function setEstudante(estudante: Estudante) {
   console.log(error)
 }
 
-const { data: instituicoes, error: errorInstituicoes } = await client.from('instituicoes').select('id, nome')    
+const { data: instituicoes, error: errorInstituicoes } = await client.from('instituicoes').select('id, nome')
 </script>
 <template>
-<div>
+  <div>
     <Card>
       <template #title>
         Novo Estudante
