@@ -1,5 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    head: {
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale='",
+      title: "Sistema Gerenciador de Vagas"
+    }
+  },
   devtools: { 
     enabled: true
   },

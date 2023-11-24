@@ -100,7 +100,7 @@ const role = await useRole()
   <div>
     <Card>
       <template #title>
-        Novo Estudante ({{ role }})
+        Novo Estudante
       </template>
       <template #content>
         <UForm :schema="schema" :state="state" class="space-y-4" @submit="setEstudante(state)">

@@ -4,6 +4,9 @@ definePageMeta({
 })
 const client = useSupabaseClient()
 
+const role = await useRole()
+const allowed = (role === 'Administrador')
+
 const { data: estudantes, error: estudante_error } = await client.from('estudantes').select('id, nome, residente, periodo, instituicao_id(id, nome), vagas(id, servico_id, inicio, fim)')
 const { data: vagas, error: vagas_error } = await client.from('vagas').select('*')
 const { data: servicos, error: servicos_error } = await client.from('servicos').select('id,nome')
@@ -95,7 +98,9 @@ function nomeServico(id: number, servicos: [{ "id": number, "nome": string }]) {
       </template>
       <template #footer>
         <NuxtLink to="/estudante/new"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+          v-if="role === 'Administrador'"
+        >
           Criar Estudante</NuxtLink>
       </template>
     </Card>

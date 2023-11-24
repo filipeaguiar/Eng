@@ -12,12 +12,15 @@ const signUp = async () => {
   console.log('error', error)
 }
 
+const errorMessage = ref('')
 const login = async () => {
   const { data, error } = await client.auth.signInWithPassword({
     email: email.value,
     password: password.value
   })
-  console.log('error', error)
+  if(error) {
+    errorMessage.value = 'Usuário ou Senha inválidos'
+  }
 }
 
 const user = useSupabaseUser()
@@ -70,21 +73,21 @@ onMounted(() => {
             class="block w-full mt-1 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
           >
         </label>
-
+        <span class="text-red-500">{{ errorMessage }}</span>
         <div class="flex items-center justify-between mt-4">
-          <div>
-            <label class="inline-flex items-center">
-              <input type="checkbox" class="text-indigo-600 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500">
-              <span class="mx-2 text-sm text-gray-600">Permanecer logado</span>
-            </label>
-          </div>
+          <!-- <div> -->
+          <!--   <label class="inline-flex items-center"> -->
+          <!--     <input type="checkbox" class="text-indigo-600 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"> -->
+          <!--     <span class="mx-2 text-sm text-gray-600">Permanecer logado</span> -->
+          <!--   </label> -->
+          <!-- </div> -->
 
-          <div>
-            <a
-              class="block text-sm text-indigo-700 fontme hover:underline"
-              href="#"
-            >Esqueceu sua senha?</a>
-          </div>
+          <!-- <div> -->
+          <!--   <a -->
+          <!--     class="block text-sm text-indigo-700 fontme hover:underline" -->
+          <!--     href="#" -->
+          <!--   >Esqueceu sua senha?</a> -->
+          <!-- </div> -->
         </div>
 
         <div class="mt-6">
