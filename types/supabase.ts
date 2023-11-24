@@ -15,6 +15,7 @@ export interface Database {
           created_at: string
           id: number
           nome: string
+          perfil: Database["public"]["Enums"]["Papéis"] | null
           servico: number | null
           setor: number | null
           user_id: string | null
@@ -24,6 +25,7 @@ export interface Database {
           created_at?: string
           id?: number
           nome?: string
+          perfil?: Database["public"]["Enums"]["Papéis"] | null
           servico?: number | null
           setor?: number | null
           user_id?: string | null
@@ -33,6 +35,7 @@ export interface Database {
           created_at?: string
           id?: number
           nome?: string
+          perfil?: Database["public"]["Enums"]["Papéis"] | null
           servico?: number | null
           setor?: number | null
           user_id?: string | null
@@ -63,6 +66,7 @@ export interface Database {
       }
       estudantes: {
         Row: {
+          ativo: boolean | null
           cbo: string | null
           cns: string | null
           conselho: string | null
@@ -70,14 +74,15 @@ export interface Database {
           created_at: string
           curso: string | null
           id: number
-          instituicao_id: number | null
-          matricula: string
+          instituicao_id: number
+          matricula: string | null
           nome: string
           observacao: string | null
           periodo: number
           residente: boolean | null
         }
         Insert: {
+          ativo?: boolean | null
           cbo?: string | null
           cns?: string | null
           conselho?: string | null
@@ -85,14 +90,15 @@ export interface Database {
           created_at?: string
           curso?: string | null
           id?: number
-          instituicao_id?: number | null
-          matricula: string
+          instituicao_id: number
+          matricula?: string | null
           nome: string
           observacao?: string | null
           periodo: number
           residente?: boolean | null
         }
         Update: {
+          ativo?: boolean | null
           cbo?: string | null
           cns?: string | null
           conselho?: string | null
@@ -100,8 +106,8 @@ export interface Database {
           created_at?: string
           curso?: string | null
           id?: number
-          instituicao_id?: number | null
-          matricula?: string
+          instituicao_id?: number
+          matricula?: string | null
           nome?: string
           observacao?: string | null
           periodo?: number
@@ -235,6 +241,7 @@ export interface Database {
       }
       vagas: {
         Row: {
+          ativo: boolean | null
           created_at: string
           estudante_id: number
           fim: string
@@ -244,6 +251,7 @@ export interface Database {
           servico_id: number
         }
         Insert: {
+          ativo?: boolean | null
           created_at?: string
           estudante_id: number
           fim: string
@@ -253,6 +261,7 @@ export interface Database {
           servico_id: number
         }
         Update: {
+          ativo?: boolean | null
           created_at?: string
           estudante_id?: number
           fim?: string
@@ -293,7 +302,7 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      Papéis: "Chefia" | "Administrador"
     }
     CompositeTypes: {
       [_ in never]: never
