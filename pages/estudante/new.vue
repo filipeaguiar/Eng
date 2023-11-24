@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { z } from 'zod'
 import type { Database } from '~/types/supabase'
+import type { FormSubmitEvent } from '#ui/types';
+import type { UTextarea } from '#build/components';
+
 definePageMeta({
   title: 'Criar Estudante',
   layout: 'main'
@@ -32,6 +36,36 @@ interface Estudante {
   instituicao_id: number
 }
 
+const state = reactive({
+  nome: '',
+  cpf: '',
+  periodo: 0,
+  observacao: '',
+  cns: '',
+  conselho: '',
+  curso: '',
+  residente: false,
+  cbo: '',
+  instituicao_id: 0
+})
+
+const validate = (state: any) => {
+  console.log(state)
+  return 'valid'
+}
+
+const schema = z.object({
+  nome: z.string({ required_error: 'Nome é obrigatório' }).min(3, { message: "O nome deve ter pelo menos 3 caracteres" }).max(255),
+  cpf: z.string({ required_error: 'CPF é obrigatório' }).length(11, { message: "O CPF deve ter 11 caracteres" }),
+  periodo: z.number({ required_error: 'Período é obrigatório' }).min(1, { message: "O período deve ser maior que 0" }).max(12),
+  observacao: z.string().max(200, { message: "A observação deve ter no máximo 200 caracteres" }),
+  cns: z.string().length(15, { message: "O CNS deve ter 15 caracteres" }),
+  conselho: z.string()
+    .min(4, {message: "O número do conselhor deve ter no mínimo 4 caracteres"})
+    .max(11, { message: "O número do conselho deve ter 11 caracteres" }),
+  curso: z.string({ required_error: 'Curso é obrigatório' }).min(3, { message: "O curso deve ter no mínimo 3 caracteres" }).max(255),
+})
+
 const estudante = computed((): Estudante => {
   return {
     nome: nome.value,
@@ -63,6 +97,51 @@ const { data: instituicoes, error: errorInstituicoes } = await client.from('inst
         Novo Estudante
       </template>
       <template #content>
+        <UForm :schema="schema" :state="state" class="space-y-4" @submit="validate">
+          <USelect v-model="state.instituicao_id" :options="instituicoes as unknown[]" option-attribute="nome"
+            value-attribute="id"></USelect>
+
+          <UFormGroup label="Nome" name="nome">
+            <UInput v-model="state.nome" />
+          </UFormGroup>
+
+          <UFormGroup label="CPF" name="cpf">
+            <UInput v-model="state.cpf" />
+          </UFormGroup>
+
+          <UFormGroup label="Curso" name="curso">
+            <UInput v-model="state.curso" />
+          </UFormGroup>
+
+          <UFormGroup label="Observação" name="observacao">
+            <UTextarea v-model="state.observacao" type="textarea" />
+          </UFormGroup>
+
+          <UFormGroup label="Período" name="periodo">
+            <UInput v-model="state.periodo" type="number" />
+          </UFormGroup>
+
+          <UFormGroup label="Residente" name="residente">
+            <UCheckbox v-model="state.residente" />
+          </UFormGroup>
+
+          <div v-if="state.residente">
+            <UFormGroup label="Cartão SUS" name="cns">
+              <UInput v-model="state.cns" />
+            </UFormGroup>
+
+            <UFormGroup label="CBO" name="cbo">
+              <UInput v-model="state.cbo" />
+            </UFormGroup>
+
+            <UFormGroup label="Número do Conselho" name="conselho">
+              <UInput v-model="state.conselho" />
+            </UFormGroup>
+          </div>
+          <UButton type="submit">
+            Salvar
+          </UButton>
+        </UForm>
         <form @submit.prevent="setEstudante(estudante)">
           <div class="mb-6">
             <label for="instituicao" class="block mb-2 text-sm font-medium text-gray-900">
@@ -70,7 +149,7 @@ const { data: instituicoes, error: errorInstituicoes } = await client.from('inst
             </label>
             <select id="instituicao" v-model.number="instituicao"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-              <option v-for="instituicao in instituicoes" :value="instituicao.id">
+              <option v-for="instituicao in instituicoes">
                 {{ instituicao.nome }}
               </option>
             </select>

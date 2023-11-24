@@ -5,10 +5,16 @@ module.exports = {
     "./pages/**/*.vue",
     "./plugins/**/*.{js,ts}",
     "./nuxt.config.{js,ts}",
-    "./node_modules/flowbite/**/*.{js,ts}"
+    "./node_modules/flowbite/**/*.{js,ts}",
+    'docs/content/**/*.md'
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        themeBackground: 'var(--background)',
+        themeText: 'var(--text)',
+      },
+    },
   },
   plugins: [
     require('flowbite/plugin')

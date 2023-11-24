@@ -1,10 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { 
+    enabled: true
+  },
   pages: true,
+  colorMode: {
+    preference: "light",
+    fallback: "light",
+  },
   modules: [
     "@nuxtjs/supabase",
-    "@nuxtjs/tailwindcss"
+    "@nuxt/ui"
   ],
   css: [
     '@fortawesome/fontawesome-svg-core/styles.css'

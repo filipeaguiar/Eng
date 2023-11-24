@@ -9,7 +9,6 @@ const signUp = async () => {
     email: email.value,
     password: password.value
   })
-  console.log('user', data)
   console.log('error', error)
 }
 
@@ -33,7 +32,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center h-screen px-6 bg-gray-200">
+  <div class="flex items-center justify-center h-screen px-6 bg-gray-200 ${color-scheme}">
     <div class="w-full max-w-sm p-6 bg-white rounded-md shadow-md">
       <div class="flex items-center justify-center">
         <svg
@@ -51,12 +50,12 @@ onMounted(() => {
             stroke-linejoin="round"
           />
         </svg>
-        <span class="text-2xl font-semibold text-gray-700">SVG-GEP</span>
+        <span class="text-2xl font-semibold ">SVG-GEP</span>
       </div>
 
       <form class="mt-4" @submit.prevent="() => (isSignUp ? signUp() : login())">
         <label class="block">
-          <span class="text-sm text-gray-700">E-mail</span>
+          <span class="text-sm ">E-mail</span>
           <input
             v-model="email"
             type="email"
@@ -65,7 +64,7 @@ onMounted(() => {
         </label>
 
         <label class="block mt-3">
-          <span class="text-sm text-gray-700">Senha</span>
+          <span class="text-sm ">Senha</span>
           <input
             v-model="password"
             type="password"
@@ -106,3 +105,8 @@ onMounted(() => {
     </div>
   </div>
 </template>
+<style scoped>
+  .dark {
+    color-scheme: light !important;
+  }
+</style>
