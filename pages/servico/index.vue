@@ -1,6 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'main'
+  layout: 'main',
+  protected: true,
 })
 const client = useSupabaseClient()
 
@@ -8,23 +9,12 @@ const { data: servicos, error: servicos_error } = await client.from('servicos').
 
 const role = await useRole()
 
-function nomeServico(id: number, servicos: [{ "id": number, "nome": string }]) {
-  let nome = ''
-  servicos.forEach((servico) => {
-    if (servico.id == id) {
-      nome = servico.nome
-    }
-  })
-  return nome
-}
-
 </script>
 <template>
   <div>
     <Card>
       <template #title>
         <fa icon="fa-solid fa-house-chimney-medical" class="mr-2" /> Serviços
-        <UColorModeToggle />
       </template>
       <template #content>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -43,7 +33,7 @@ function nomeServico(id: number, servicos: [{ "id": number, "nome": string }]) {
                 <th scope="col" class="px-6 py-3">
                   Vagas
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3" v-if="role === 'Administrador'">
                   Ação
                 </th>
               </tr>
@@ -66,7 +56,7 @@ function nomeServico(id: number, servicos: [{ "id": number, "nome": string }]) {
                 <td class="px-6 py-4">
                   {{ servico.numerovagas }}
                 </td>
-                <td>
+                <td v-if="role === 'Administrador'">
                   <div class="grid grid-cols-2">
                     <NuxtLink :to="`/estudante/${servico.id}/edit`" class="font-medium block text-blue-500">
                       <fa icon="fa-solid fa-edit" />

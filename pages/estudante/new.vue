@@ -51,22 +51,21 @@ const state = reactive({
   instituicao_id: 0
 })
 
-const validate = (state: any) => {
-  console.log(state)
-  return 'valid'
-}
-
 const schema = z.object({
-  nome: z.string({ required_error: 'Nome é obrigatório' }).min(3, { message: "O nome deve ter pelo menos 3 caracteres" }).max(255),
+  nome: z.string({ required_error: 'Nome é obrigatório' }).min(3, { message: "O nome deve ter pelo menos 3 caracteres" }).max(255, { message: "O nome deve ter no máximo 255 caracteres" }),
   cpf: z.string({ required_error: 'CPF é obrigatório' }).regex(/^\d+$/, { message: "O CPF deve conter apenas números" }).length(11, { message: "O CPF deve ter 11 caracteres" }),
-  periodo: z.number({ required_error: 'Período é obrigatório' }).min(1, { message: "O período deve ser maior que 0" }).max(12),
+  periodo: z.number({ required_error: 'Período é obrigatório' }).min(1, { message: "O período deve ser maior que 0" }).max(20, { message: "O período deve ser menor que 20" }),
   observacao: z.string().max(200, { message: "A observação deve ter no máximo 200 caracteres" }),
-  cns: z.string().length(15, { message: "O CNS deve ter 15 caracteres" }),
-  conselho: z.string()
+  cns: z.string().length(15, { message: "O CNS deve ter 15 caracteres" }).or(z.string().length(0)),
+  cbo: z.string().length(6, { message: "O CBO deve ter 6 caracteres" }).or(z.string().length(0)),
+  conselho: z.string({ invalid_type_error: "O número do conselho deve ser informado com texto e números" })
     .min(4, { message: "O número do conselhor deve ter no mínimo 4 caracteres" })
-    .max(11, { message: "O número do conselho deve ter 11 caracteres" }),
+    .max(11, { message: "O número do conselho deve ter 11 caracteres" })
+    .or(z.string().length(0)),
   curso: z.string({ required_error: 'Curso é obrigatório' }).min(3, { message: "O curso deve ter no mínimo 3 caracteres" }).max(255),
 })
+
+type Schema = z.output<typeof schema>
 
 const estudante = computed((): Estudante => {
   return {
@@ -84,26 +83,31 @@ const estudante = computed((): Estudante => {
   }
 })
 
-async function setEstudante(estudante: Estudante) {
+const errorMessage = ref('')
+async function setEstudante(event: FormSubmitEvent<Schema>) {
   const client = useSupabaseClient<Database>()
-  estudante.matricula = estudante.cpf
-  const { data: savedEstudante, error } = await client.from('estudantes').insert(estudante)
-  console.log(error)
+  const { data: savedEstudante, error } = await client.from('estudantes').insert(state)
+  if (error) {
+    errorMessage.value = 'O CPF já está cadastrado!'
+    return
+  }
+  navigateTo(`/estudante`)
 }
 
 const { data: instituicoes, error: errorInstituicoes } = await client.from('instituicoes').select('id, nome')
 
 const role = await useRole()
 
+const formStatus = computed(() => schema.safeParse(state))
 </script>
 <template>
   <div>
     <Card>
       <template #title>
-        Novo Estudante
+        <fa icon="fa-solid fa-user-graduate" /> Novo Estudante
       </template>
       <template #content>
-        <UForm :schema="schema" :state="state" class="space-y-4" @submit="setEstudante(state)">
+        <UForm :schema="schema" :state="state" class="space-y-4" @submit="setEstudante">
           <UFormGroup label="Instituição" name="instituicao_id">
             <USelect v-model="state.instituicao_id" :options="instituicoes as unknown[]" option-attribute="nome"
               value-attribute="id">
@@ -146,8 +150,11 @@ const role = await useRole()
               <UInput v-model="state.conselho" />
             </UFormGroup>
           </div>
-          <UButton type="submit">
-            Salvar
+          <div v-if="errorMessage">
+            <p class="text-red-500">{{ errorMessage }}</p>
+          </div>
+          <UButton type="submit" :disabled="!formStatus.success">
+            <fa icon="fa-solid fa-save" /> Salvar
           </UButton>
         </UForm>
       </template>

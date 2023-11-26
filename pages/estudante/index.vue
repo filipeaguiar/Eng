@@ -48,7 +48,7 @@ function nomeServico(id: number, servicos: [{ "id": number, "nome": string }]) {
                 <th scope="col" class="px-6 py-3">
                   Vagas
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col" class="px-6 py-3" v-if="role === 'Administrador'">
                   Ação
                 </th>
               </tr>
@@ -81,7 +81,7 @@ function nomeServico(id: number, servicos: [{ "id": number, "nome": string }]) {
                     {{ nomeServico(vaga.servico_id, servicos) }}
                   </a>
                 </td>
-                <td>
+                <td v-if="role === 'Administrador'">
                   <div class="grid grid-cols-2">
                     <NuxtLink :to="`/estudante/${estudante.id}/edit`" class="font-medium block text-blue-500">
                       <fa icon="fa-solid fa-edit" />
@@ -101,7 +101,7 @@ function nomeServico(id: number, servicos: [{ "id": number, "nome": string }]) {
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
           v-if="role === 'Administrador'"
         >
-          Criar Estudante</NuxtLink>
+          <fa icon="fa-solid fa-plus" /> Novo Estudante</NuxtLink>
       </template>
     </Card>
   </div>

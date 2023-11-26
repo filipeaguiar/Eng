@@ -302,7 +302,7 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      Papéis: "Chefia" | "Administrador"
+      Papéis: "Chefia" | "Administrador" | "Estudante"
     }
     CompositeTypes: {
       [_ in never]: never

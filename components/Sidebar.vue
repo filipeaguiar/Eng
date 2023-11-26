@@ -44,12 +44,12 @@ const inactiveClass = ref(
         <NuxtLink class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
           :class="[$route.name === 'servico' ? activeClass : inactiveClass]" to="/servico">
           <fa icon="fa-solid fa-house-chimney-medical" />
-          <span class="mx-4">Serviço</span>
+          <span class="mx-4">Serviços</span>
         </NuxtLink>
         <NuxtLink class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
           :class="[$route.name === 'instituicao' ? activeClass : inactiveClass]" to="/instituicao">
           <fa icon="fa-solid fa-building-columns" />
-          <span class="mx-4">Instituição</span>
+          <span class="mx-4">Instituições</span>
         </NuxtLink>
         <NuxtLink class="flex items-center px-6 py-2 mt-4 duration-200 border-l-4"
           :class="[$route.name === 'vaga' ? activeClass : inactiveClass]" to="/vaga">

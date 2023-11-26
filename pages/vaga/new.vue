@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ZodLazy, z } from 'zod'
 import type { Database } from '~/types/supabase'
+import type { FormSubmitEvent } from '#ui/types'
 definePageMeta({
   title: 'Criar Estudante',
   layout: 'main'
@@ -9,27 +11,14 @@ const client = useSupabaseClient<Database>()
 const { data: instituicoes, error: errorInstituicoes } = await client.from('instituicoes').select('id, nome, programas(id, nome)')
 const { data: servicos, error: erroServicos } = await client.from('servicos').select('id, nome')
 const { data: programas, error: errorProgramas } = await client.from('programas').select('id, nome, instituicao_id')
-const { data: estudantes, error: errorEstudantes } = await client.from('estudantes').select('id, nome, instituicao_id').eq('ativo', true)
+const { data: estudantes, error: errorEstudantes } = await client.from('estudantes').select('id, nome, instituicao_id, vagas(servico_id)').eq('ativo', true)
 
-const estudante = ref('')
-const programa = ref('')
 const instituicao = ref('')
-const servico = ref('')
 const inicio = ref('')
 const fim = ref('')
 
-const vaga = computed(() => {
-  return {
-    estudante_id: estudante.value,
-    programa_id: programa.value,
-    servico_id: servico.value,
-    inicio: inicio.value,
-    fim: fim.value
-  }
-})
-
 const programasSelect = computed(() => {
-  const filteredProgramas = programas.filter(programa => parseInt(programa.instituicao_id) === instituicao.value)
+  const filteredProgramas = programas.filter(programa => programa.instituicao_id === instituicao.value)
   return filteredProgramas
 })
 
@@ -38,12 +27,49 @@ const estudantesSelect = computed(() => {
   return filteredEstudantes
 })
 
-async function setVaga(vaga) {
+const servicosSelect = computed(() => {
+  // filter servicos removing all servicos where servico.id is not in estudante.vagas.servico_id on estudante.id === state.estudante_id
+  const estudante = estudantes.find(estudante => estudante.id === state.estudante_id)
+  const filteredServicos = servicos.filter(servico => !estudante.vagas.some(vaga => vaga.servico_id === servico.id))
+  return filteredServicos
+})
+
+type Schema = z.output<typeof schema>
+
+async function setVaga(event: FormSubmitEvent<Schema>) {
   const client = useSupabaseClient<Database>()
-  const { data: savedVaga, error } = await client.from('vagas').insert(vaga)
-  console.log(error?.message)
+  const { data: savedVaga, error } = await client.from('vagas').insert(state)
+  if (error) {
+    console.error(error.message)
+    return
+  }
+  navigateTo('/vaga')
 }
 
+const state = reactive({
+  estudante_id: 0,
+  programa_id: null,
+  servico_id: 0,
+  inicio: '',
+  fim: ''
+})
+
+const schema = z.object({
+  estudante_id: z.number({ required_error: 'Estudante é obrigatório' }).min(1),
+  programa_id: z.null().or(z.number({ required_error: 'Programa é obrigatório' }).min(1)),
+  servico_id: z.number({ required_error: 'Serviço é obrigatório' }).min(1),
+  inicio: z.string({ required_error: 'Início é obrigatório' })
+    .regex(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/g),
+  fim: z.string({ required_error: 'Fim é obrigatório' })
+    .regex(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/g)
+    .refine(value => {
+      const inicioDate = new Date(state.inicio)
+      const fimDate = new Date(value)
+      return fimDate > inicioDate
+    }, { message: 'Fim deve ser maior que início' })
+})
+
+const formStatus = computed(() => schema.safeParse(state))
 </script>
 <template>
   <div>
@@ -52,72 +78,40 @@ async function setVaga(vaga) {
         <fa icon="fa-solid fa-calendar-check" /> Cadastrar Vaga
       </template>
       <template #content>
-        <form @submit.prevent="setVaga(vaga)">
-          <div class="mb-6">
-            <label for="instituicao" class="block mb-2 text-sm font-medium text-gray-900">
-              Instituição
-            </label>
-            <select id="instituicao" v-model.number="instituicao"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-              <option v-for="instituicao in instituicoes" :value="instituicao.id">
-                {{ instituicao.nome }}
-              </option>
-            </select>
-          </div>
-          <div class="mb-6" v-if="programasSelect">
-            <label for="programa" class="block mb-2 text-sm font-medium text-gray-900">
-              Programa
-            </label>
-            <select id="programa" v-model.number="programa"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-              <option v-for="(programa, id) in programasSelect" :key="id" :value="programa.id">
-                {{ programa.nome }}
-              </option>
-            </select>
-          </div>
-          <div class="mb-6">
-            <label for="servico" class="block mb-2 text-sm font-medium text-gray-900">
-              Servico
-            </label>
-            <select id="servico" v-model.number="servico"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-              <option v-for="(servico, id) in servicos" :key="id" :value="servico.id">
-                {{ servico.nome }}
-              </option>
-            </select>
-          </div>
-          <div class="mb-6">
-            <label for="programa" class="block mb-2 text-sm font-medium text-gray-900">
-              Estudante
-            </label>
-            <select id="estudante" v-model.number="estudante"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-              <option v-for="(estudante, id) in estudantesSelect" :key="id" :value="estudante.id">
-                {{ estudante.nome }}
-              </option>
-            </select>
-          </div>
-          <div class="mb-6">
-            <div class="relative grid grid-cols-2 gap-4">
-              <div>
-                <label for="inicio">Início</label>
-              <input datepicker type="date" id="inicio" v-model="inicio"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
-                placeholder="Escolha uma Data">
-              </div>
-              <div>
-                <label for="fim">Fim</label>
-              <input datepicker type="date" id="fim" v-model="fim"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
-                placeholder="Escolha uma Data">
-              </div>
-            </div>
-          </div>
-          <button type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            Criar
-          </button>
-        </form>
+        <UForm :schema="schema" :state="state" class="space-y-4" @submit="setVaga">
+          <UFormGroup label="Instituição" name="instituicao_id">
+            <USelect v-model.number="instituicao" :options="instituicoes as unknown[]" option-attribute="nome"
+              value-attribute="id">
+            </USelect>
+          </UFormGroup>
+          <UFormGroup label="Estudante" name="estudante_id">
+            <USelect v-model.number="state.estudante_id" :options="estudantesSelect as unknown[]" option-attribute="nome"
+              value-attribute="id">
+            </USelect>
+          </UFormGroup>
+          <UFormGroup label="Serviço" name="servico_id" v-if="state.estudante_id !== 0">
+            <USelect v-model.number="state.servico_id" :options="servicosSelect as unknown[]" option-attribute="nome"
+              value-attribute="id">
+            </USelect>
+          </UFormGroup>
+          <UFormGroup label="Programa" name="programa_id">
+            <USelect v-model.number="state.programa_id" :options="programasSelect as unknown[]" option-attribute="nome"
+              value-attribute="id">
+            </USelect>
+          </UFormGroup>
+          <UFormGroup label="Início" name="inicio">
+            <UInput v-model="state.inicio" type="date" />
+          </UFormGroup>
+          <UFormGroup label="Fim" name="fim">
+            <UInput v-model="state.fim" type="date" />
+          </UFormGroup>
+          <UButton type="submit" :disabled="!formStatus.success">
+            <fa icon="fa-solid fa-link" /> Solicitar Alocação
+          </UButton>
+        </UForm>
+      </template>
+      <template #footer>
       </template>
     </Card>
-</div></template>
+  </div>
+</template>
